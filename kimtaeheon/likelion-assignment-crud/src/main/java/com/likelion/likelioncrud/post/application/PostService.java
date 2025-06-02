@@ -30,7 +30,7 @@ public class PostService {
     // 게시물 저장
     @Transactional
     public void postSave(PostSaveRequestDto postSaveRequestDto) {
-        Member member = getMember(postSaveRequestDto);
+        Member member = getMember(postSaveRequestDto.memberId());
 
         Post post = Post.builder()
                 .title(postSaveRequestDto.title())
@@ -51,7 +51,7 @@ public class PostService {
 
     // 특정 작성자가 작성한 게시글 목록을 조회
     public PostListResponseDto postFindMember(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(IllegalArgumentException::new);
+        Member member = getMember(memberId);
 
         List<Post> posts = postRepository.findByMember(member);
         List<PostInfoResponseDto> postInfoResponseDtos = posts.stream()
@@ -67,6 +67,7 @@ public class PostService {
     }
 
     // 게시물 수정
+
     @Transactional
     public void postUpdate(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
         Post post = getPost(postId);
@@ -91,9 +92,10 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    private Member getMember(PostSaveRequestDto postSaveRequestDto) {
-        return memberRepository.findById(postSaveRequestDto.memberId()).orElseThrow(() -> new BusinessException(
-                ErrorCode.MEMBER_NOT_FOUND_EXCEPTION, ErrorCode.MEMBER_NOT_FOUND_EXCEPTION.getMessage() + postSaveRequestDto.memberId()));
+    private Member getMember(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new BusinessException(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION, ErrorCode.MEMBER_NOT_FOUND_EXCEPTION.getMessage() + memberId));
+        return member;
     }
 
     private Post getPost(Long postId) {

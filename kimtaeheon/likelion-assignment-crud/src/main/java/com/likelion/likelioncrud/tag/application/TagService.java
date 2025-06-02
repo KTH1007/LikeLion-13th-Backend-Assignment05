@@ -26,7 +26,7 @@ public class TagService {
     public void tagSave(TagSaveRequestDto tagSaveRequestDto) {
         Optional<Tag> existingTag = tagRepository.findByName(tagSaveRequestDto.name());
         if (existingTag.isPresent()) {
-            return;
+            throw new BusinessException(ErrorCode.TAG_ALREADY_EXISTS, ErrorCode.TAG_ALREADY_EXISTS.getMessage());
         }
 
         Tag tag = Tag.builder()
@@ -62,6 +62,6 @@ public class TagService {
 
     private Tag findTag(Long tagId) {
         return tagRepository.findById(tagId).orElseThrow(() -> new BusinessException(
-                ErrorCode.Tag_NOT_FOUND_EXCEPTION, ErrorCode.Tag_NOT_FOUND_EXCEPTION.getMessage()));
+                ErrorCode.TAG_NOT_FOUND_EXCEPTION, ErrorCode.TAG_NOT_FOUND_EXCEPTION.getMessage()));
     }
 }

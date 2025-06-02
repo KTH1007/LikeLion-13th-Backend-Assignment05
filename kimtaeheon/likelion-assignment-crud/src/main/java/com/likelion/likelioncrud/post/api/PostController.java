@@ -25,14 +25,14 @@ public class PostController {
     }
 
     // 사용자 id를 기준으로 해당 사용자가 작성한 게시글 목록 조회
-    @GetMapping("/{memberId}")
+    @GetMapping("/member/{memberId}")
     public ApiResTemplate<PostListResponseDto> myPostFindAll(@PathVariable("memberId") Long memberId) {
         PostListResponseDto postListResponseDto = postService.postFindMember(memberId);
         return ApiResTemplate.successResponse(SuccessCode.GET_SUCCESS, postListResponseDto);
     }
 
     // 게시물 단건 조회
-    @GetMapping("/find/{postId}")
+    @GetMapping("/{postId}")
     public ApiResTemplate<PostInfoResponseDto> getPost(@PathVariable("postId") Long postId) {
         PostInfoResponseDto postInfoResponseDto = postService.findPost(postId);
         return ApiResTemplate.successResponse(SuccessCode.GET_SUCCESS, postInfoResponseDto);
